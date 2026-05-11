@@ -1,4 +1,4 @@
-# organize_identities.py
+
 
 Automatically separates mixed face images inside identity folders into per-person subfolders using a  InsightFace buffalo_l — ResNet50 ArcFace —model
 
@@ -46,16 +46,11 @@ identities/
 
 ---
 
-## Requirements
-
-### Model
-
-This script was built and tested against the **InsightFace `buffalo_l` recognition backbone** — ResNet-50 + ArcFace, exported from PyTorch via `torch.jit`.
 
 Inspected model specs:
 
 | Property | Value |
-|---|---|
+|----------|-------|
 | Input tensor name | `input.1` |
 | Input shape | `[N, 3, 112, 112]` float32 |
 | Input format | BGR, normalised to `[-1, 1]` via `(pixel − 127.5) / 127.5` |
@@ -246,9 +241,3 @@ python organize_identities.py \
 **Greedy assignment is permanent.** Each image is assigned to a cluster once, in alphabetical order, and never re-evaluated. If a blurry or unusual image is processed first, it becomes the cluster's founding representative and may inflate distances for subsequent images. Mitigation: use `--blur-threshold` to skip low-quality images, or rename files so the best-quality images sort first alphabetically.
 
 **No re-clustering.** The algorithm does not run multiple passes or optimise globally. For a perfect separation, review the `_unreadable/` folder and re-run after cleaning up low-quality images.
-
-**Look-alike faces.** The model cannot reliably distinguish identical twins or siblings with very similar facial structure. Use a stricter tolerance and review those clusters manually.
-
-**Single-image folders.** A folder containing only one valid image always produces exactly one subfolder (`<identity>_1/`) with that image in it.
-
-**Already-organised folders are skipped.** If a folder contains no loose images at its top level (only subfolders), it is skipped entirely. Re-running on an already-processed dataset is safe.
